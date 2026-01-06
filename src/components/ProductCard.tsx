@@ -27,7 +27,7 @@ export function ProductCard({ product }: { product: ProductInsert }) {
     >
       <Card className="px-2 py-4">
         <CardHeader className="gap-2">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between gap-2">
             {product.badge && (
               <span className="rounded-full bg-slate-900 px-2 py-0.5 text-xs font-semibold text-white">
                 {product.badge}

@@ -48,3 +48,16 @@ export async function createProduct(product: CreateProduct) {
     return { success: false }
   }
 }
+
+export async function deleteProductById(id: string) {
+  try {
+    await prisma.product.delete({
+      where: {
+        id,
+      },
+    })
+    return { success: true }
+  } catch (error) {
+    return { success: false }
+  }
+}

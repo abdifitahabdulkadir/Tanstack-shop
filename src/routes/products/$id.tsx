@@ -1,10 +1,16 @@
 import AddToCart from "@/components/AddToCart"
 import ProductSkelton from "@/components/ProductSkelton"
 import RecommendedProducts from "@/components/RecommendedProducts"
-import { getProductById, getRecommendedProducts } from "@/db/products.server"
+import {
+  deleteProductById,
+  getProductById,
+  getRecommendedProducts,
+} from "@/db/products.server"
 import { createFileRoute, Link } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/react-start"
+import { Trash } from "lucide-react"
 import { Suspense } from "react"
+import toast from "react-hot-toast"
 
 const fetProductById = createServerFn({ method: "GET" })
   .inputValidator((data: { id: string }) => data)
@@ -57,14 +63,27 @@ export const Route = createFileRoute("/products/$id")({
     }
   },
 })
+const deleteProduct = createServerFn({ method: "POST" })
+  .inputValidator((data: { productId: string }) => data)
+  .handler(async ({ data }) => await deleteProductById(data.productId))
 
 function RouteComponent() {
   const { product } = Route.useLoaderData()
+  const { id } = Route.useParams()
 
   if (!product) {
     return (
       <div className="p-6 text-center text-red-500">Product not found.</div>
     )
+  }
+
+  async function handleProductDeletion() {
+    const result = await deleteProduct({ data: { productId: id } })
+    if (result.success) {
+      toast.success("Successfully Deleted a product")
+      return
+    }
+    toast.error("Failed to  delete the product. Please try again.")
   }
 
   return (
@@ -120,6 +139,13 @@ function RouteComponent() {
               ${product.price}
             </span>
             <AddToCart />
+            <Trash
+              onClick={(e) => {
+                e.stopPropagation()
+                handleProductDeletion()
+              }}
+              className="text-primary"
+            />
           </div>
         </div>
       </div>

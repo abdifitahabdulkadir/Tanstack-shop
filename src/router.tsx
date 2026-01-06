@@ -1,4 +1,4 @@
-import { createRouter } from "@tanstack/react-router"
+import { createRouter, Link } from "@tanstack/react-router"
 
 // Import the generated route tree
 import { QueryClient } from "@tanstack/react-query"
@@ -13,7 +13,8 @@ export const getRouter = () => {
       queryClient: new QueryClient(),
     },
     defaultPreloadStaleTime: 0,
-    defaultErrorComponent: () => {
+    defaultErrorComponent: (e) => {
+      console.log(e)
       return (
         <div
           style={{ textAlign: "center", marginTop: "6rem", color: "#ef4444" }}
@@ -43,8 +44,8 @@ export const getRouter = () => {
           <p style={{ color: "#64748b" }}>
             Sorry, the page you are looking for does not exist.
           </p>
-          <a
-            href="/"
+          <Link
+            to="/"
             style={{
               padding: "0.5rem 1.5rem",
               backgroundColor: "#334155",
@@ -54,6 +55,7 @@ export const getRouter = () => {
               textDecoration: "none",
               marginTop: "0.5rem",
               transition: "background 190ms",
+              display: "inline-block",
             }}
             onMouseOver={(e) =>
               (e.currentTarget.style.backgroundColor = "#475569")
@@ -63,7 +65,7 @@ export const getRouter = () => {
             }
           >
             Go Home
-          </a>
+          </Link>
         </div>
       )
     },

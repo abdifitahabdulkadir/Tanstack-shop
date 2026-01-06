@@ -9,3 +9,5 @@ type ProductInsert = {
   inventory: string
   id: string
 }
+
+type CreateProduct = Omit<ProductInsert, "id" | "rating" | "reviews">

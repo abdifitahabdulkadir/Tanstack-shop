@@ -32,3 +32,19 @@ export async function getProductById({ id }: { id: string }) {
     return null
   }
 }
+
+export async function createProduct(product: CreateProduct) {
+  try {
+    await prisma.product.create({
+      data: {
+        ...product,
+        rating: "",
+        reviews: 0,
+      },
+    })
+    return { success: true }
+  } catch (error) {
+    console.log(error)
+    return { success: false }
+  }
+}

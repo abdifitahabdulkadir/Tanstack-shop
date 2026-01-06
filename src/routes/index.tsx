@@ -5,14 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { getRecommendedProducts } from "@/db/products"
+import { getALlProducts } from "@/db/products.server"
+
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon } from "lucide-react"
+
+const fetchAllProducts = createServerFn({ method: "GET" }).handler(
+  async () => await getALlProducts(),
+)
 
 export const Route = createFileRoute("/")({
   component: App,
   loader: async () => {
-    return await getRecommendedProducts()
+    return await fetchAllProducts()
   },
 })
 

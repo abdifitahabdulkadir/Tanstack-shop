@@ -8,6 +8,7 @@ import {
   createRootRouteWithContext,
 } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
+import { Toaster } from "react-hot-toast"
 import appCss from "../styles.css?url"
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   {
@@ -49,7 +50,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <body>
           <div className="min-h-screen w-full bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-white">
             <Header />
-            <main className="mx-auto max-w-6xl py-10 px6">{children}</main>
+            <main className="mx-auto max-w-6xl py-10 px6">
+              {children}
+              <Toaster />
+            </main>
           </div>
           <TanStackDevtools
             config={{

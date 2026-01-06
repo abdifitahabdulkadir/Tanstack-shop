@@ -26,12 +26,12 @@ export default function Header() {
               Home
             </Link>
             <Link
-              to="/"
+              to="/products"
               className="rounded-lg px-3 py-1 transition hover:bg-slate-100 dark:hover:bg-slate-800"
             >
               Products
             </Link>
-            <Link to="/">Create Product</Link>
+            <Link to="/create-product">Create Product</Link>
           </nav>
         </div>
         <div className="flex items-center gap-2">

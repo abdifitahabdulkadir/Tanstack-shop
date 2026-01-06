@@ -5,16 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { getALlProducts } from "@/db/products"
+import { getALlProducts } from "@/db/products.server"
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
 
-// const fetchProducts = createServerFn({ method: "GET" }).handler(
-//   async () => await getALlProducts(),
-// )
+// run on server callable on the client.
+const fetchAllProducts = createServerFn({ method: "GET" }).handler(async () => {
+  return await getALlProducts()
+})
+
 export const Route = createFileRoute("/products/")({
   component: RouteComponent,
   loader: async () => {
-    return await getALlProducts()
+    // run the server anad for sepsequent navigation, it runs on the client.
+    return fetchAllProducts()
   },
 })
 

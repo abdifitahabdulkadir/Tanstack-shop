@@ -1,14 +1,30 @@
 import AddToCart from "@/components/AddToCart"
-import { getProductById } from "@/db/products"
+import ProductSkelton from "@/components/ProductSkelton"
+import RecommendedProducts from "@/components/RecommendedProducts"
+import { getProductById, getRecommendedProducts } from "@/db/products.server"
 import { createFileRoute, Link } from "@tanstack/react-router"
+import { createServerFn } from "@tanstack/react-start"
+import { Suspense } from "react"
+
+const fetProductById = createServerFn({ method: "GET" })
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data }) => {
+    return await getProductById({ id: data.id })
+  })
+
+const getRecommended = createServerFn({ method: "GET" }).handler(
+  getRecommendedProducts,
+)
 
 export const Route = createFileRoute("/products/$id")({
   component: RouteComponent,
+
   loader: async ({ params }) => {
-    return await getProductById({ id: params.id })
+    const product = await fetProductById({ data: { id: params.id } })
+    return { product }
   },
   head: async ({ loaderData }) => {
-    const product = loaderData
+    const product = loaderData?.product
     return {
       meta: [
         {
@@ -43,7 +59,7 @@ export const Route = createFileRoute("/products/$id")({
 })
 
 function RouteComponent() {
-  const product = Route.useLoaderData()
+  const { product } = Route.useLoaderData()
 
   if (!product) {
     return (
@@ -99,7 +115,6 @@ function RouteComponent() {
                   : "Preorder"}
             </span>
           </div>
-
           <div className="w-full flex items-center justify-between">
             <span className="text-2xl font-bold text-slate-900 mt-2">
               ${product.price}
@@ -107,6 +122,15 @@ function RouteComponent() {
             <AddToCart />
           </div>
         </div>
+      </div>
+      <div>
+        <h2 className="text-3xl font-bold text-pink-600 mb-6 flex items-center gap-2">
+          🐷 Recommended Products
+        </h2>
+
+        <Suspense fallback={<ProductSkelton />}>
+          <RecommendedProducts recommended={getRecommended()} />
+        </Suspense>
       </div>
     </div>
   )

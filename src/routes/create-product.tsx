@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select"
 import { createProduct } from "@/db/products.server"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { createFileRoute, useNavigate, useRouter } from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/react-start"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
@@ -66,6 +66,7 @@ function RouteComponent() {
     resolver: zodResolver(productSchema),
   })
   const navigate = useNavigate()
+  const router = useRouter()
 
   async function handleFormSubmit(data: z.infer<typeof productSchema>) {
     const result = await createdProductItem({
@@ -80,6 +81,8 @@ function RouteComponent() {
     })
     if (result.success) {
       toast.success("Successfully Added Product")
+      router.invalidate({ sync: true })
+      navigate({ to: "/products" })
       return
     }
     toast.error("Failed to Add product. please try again")

@@ -6,7 +6,12 @@ import {
   getProductById,
   getRecommendedProducts,
 } from "@/db/products.server"
-import { createFileRoute, Link } from "@tanstack/react-router"
+import {
+  createFileRoute,
+  Link,
+  useNavigate,
+  useRouter,
+} from "@tanstack/react-router"
 import { createServerFn } from "@tanstack/react-start"
 import { Trash } from "lucide-react"
 import { Suspense } from "react"
@@ -70,6 +75,8 @@ const deleteProduct = createServerFn({ method: "POST" })
 function RouteComponent() {
   const { product } = Route.useLoaderData()
   const { id } = Route.useParams()
+  const router = useRouter()
+  const navigate = useNavigate()
 
   if (!product) {
     return (
@@ -81,6 +88,8 @@ function RouteComponent() {
     const result = await deleteProduct({ data: { productId: id } })
     if (result.success) {
       toast.success("Successfully Deleted a product")
+      router.invalidate({ sync: true })
+      navigate({ to: "/products" })
       return
     }
     toast.error("Failed to  delete the product. Please try again.")

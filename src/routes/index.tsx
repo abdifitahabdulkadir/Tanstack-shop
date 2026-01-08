@@ -75,7 +75,13 @@ function App() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
             {products?.map((product, index) => (
-              <ProductCard key={index} product={product} />
+              <ProductCard
+                key={index}
+                product={{
+                  ...product,
+                  isAddedToCart: product.isisAddedToCart,
+                }}
+              />
             ))}
           </div>
         </Card>

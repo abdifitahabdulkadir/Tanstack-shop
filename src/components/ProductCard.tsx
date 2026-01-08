@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils"
 
 import { Link } from "@tanstack/react-router"
+import AddedToCart from "./AddedToCart"
 import AddToCart from "./AddToCart"
 import {
   Card,
@@ -18,6 +19,7 @@ const inventoryTone = {
 }
 
 export function ProductCard({ product }: { product: ProductInsert }) {
+  console.log("from product card: ", product)
   return (
     <Link
       to="/products/$id"
@@ -60,7 +62,11 @@ export function ProductCard({ product }: { product: ProductInsert }) {
         </CardContent>
         <CardFooter className="pt-0 flex items-center justify-between border-t-0 bg-transparent">
           <span className="text-lg font-semibold">${product.price}</span>
-          <AddToCart />
+          {product.isAddedToCart ? (
+            <AddedToCart />
+          ) : (
+            <AddToCart productId={product.id} quantity={1} />
+          )}
         </CardFooter>
       </Card>
     </Link>

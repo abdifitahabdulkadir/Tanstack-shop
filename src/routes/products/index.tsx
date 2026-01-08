@@ -56,7 +56,13 @@ function RouteComponent() {
       <section>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data?.map((product, index) => (
-            <ProductCard key={`product-${index}`} product={product} />
+            <ProductCard
+              key={`product-${index}`}
+              product={{
+                ...product,
+                isAddedToCart: product.isisAddedToCart,
+              }}
+            />
           ))}
         </div>
       </section>

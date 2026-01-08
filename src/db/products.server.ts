@@ -2,8 +2,22 @@ import prisma from "prisma/prisma"
 
 export async function getRecommendedProducts() {
   try {
-    return await prisma.product.findMany({
+    const result = await prisma.product.findMany({
       take: 3,
+      include: {
+        cartItems: {
+          select: {
+            productId: true,
+          },
+        },
+      },
+    })
+    return result.map((eachProduct) => {
+      const { cartItems, ...rest } = eachProduct
+      return {
+        ...rest,
+        isAddedToCart: cartItems !== null,
+      }
     })
   } catch (error) {
     console.log(error)
@@ -13,7 +27,22 @@ export async function getRecommendedProducts() {
 
 export async function getALlProducts() {
   try {
-    return await prisma.product.findMany()
+    const resuts = await prisma.product.findMany({
+      include: {
+        cartItems: {
+          select: {
+            productId: true,
+          },
+        },
+      },
+    })
+    return resuts.map((eachProduct) => {
+      const { cartItems, ...rest } = eachProduct
+      return {
+        ...rest,
+        isisAddedToCart: cartItems !== null,
+      }
+    })
   } catch (error) {
     console.log(error)
     return []
@@ -22,11 +51,23 @@ export async function getALlProducts() {
 
 export async function getProductById({ id }: { id: string }) {
   try {
-    return await prisma.product.findFirst({
+    const getProductByIdResult = await prisma.product.findFirst({
       where: {
         id,
       },
+      include: {
+        cartItems: {},
+      },
     })
+    if (getProductByIdResult) {
+      const { cartItems, ...rest } = getProductByIdResult
+      const transformed: ProductInsert = {
+        ...rest,
+        isAddedToCart: cartItems !== null,
+      }
+      return transformed
+    }
+    return null
   } catch (error) {
     console.log(error)
     return null
@@ -44,7 +85,6 @@ export async function createProduct(product: CreateProduct) {
     })
     return { success: true }
   } catch (error) {
-    console.log(error)
     return { success: false }
   }
 }

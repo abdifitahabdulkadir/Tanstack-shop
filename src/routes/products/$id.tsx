@@ -1,3 +1,4 @@
+import AddedToCart from "@/components/AddedToCart"
 import AddToCart from "@/components/AddToCart"
 import ProductSkelton from "@/components/ProductSkelton"
 import RecommendedProducts from "@/components/RecommendedProducts"
@@ -107,7 +108,7 @@ function RouteComponent() {
         <img
           src={product.image}
           alt={product.name}
-          className=" mx-auto max-w-64 max-h-64 h-fit w-fit object-cover  border"
+          className="mx-auto max-w-64 max-h-64 h-fit w-fit object-cover  border"
         />
         <div className="flex-1 flex flex-col gap-3">
           <h1 className="text-2xl font-bold">{product.name}</h1>
@@ -147,7 +148,11 @@ function RouteComponent() {
             <span className="text-2xl font-bold text-slate-900 mt-2">
               ${product.price}
             </span>
-            <AddToCart />
+            {product.isAddedToCart ? (
+              <AddedToCart />
+            ) : (
+              <AddToCart productId={product.id} quantity={1} />
+            )}
             <Trash
               onClick={(e) => {
                 e.stopPropagation()
